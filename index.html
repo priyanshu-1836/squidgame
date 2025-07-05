@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Squid Game - Red Light Green Light</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🦑 Red Light, Green Light Game</h1>
+        <h2>Light: <span class="{{ light }}">{{ light.upper() }}</span></h2>
+        <h3>Position: {{ position }}</h3>
+        <p>{{ message }}</p>
+
+        <form action="/move" method="post">
+            <button name="move" value="yes">🚶 Move</button>
+            <button name="move" value="no">🛑 Stay</button>
+        </form>
+    </div>
+</body>
+</html>
