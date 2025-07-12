@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Simple Modern Website</title>
+  <title>Tic Tac Toe Game</title>
   <style>
     * {
       margin: 0; padding: 0;
@@ -12,151 +12,310 @@
     }
 
     body {
-      background: linear-gradient(120deg, #fdfbfb, #ebedee);
-      color: #333;
-    }
-
-    header {
+      background: linear-gradient(120deg, #00c6ff, #0072ff);
+      min-height: 100vh;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      padding: 1rem 2rem;
-      background: white;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
+      flex-direction: column;
     }
 
-    .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #1a1a1a;
-    }
-
-    nav a {
-      text-decoration: none;
-      margin: 0 15px;
-      font-weight: 500;
-      color: #333;
+    .screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
       position: relative;
-    }
-
-    nav a::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -4px;
-      width: 0%;
-      height: 2px;
-      background-color: #007bff;
-      transition: 0.3s;
-    }
-
-    nav a:hover::after {
       width: 100%;
     }
 
-    .hero {
+    .screen.active {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 90vh;
-      text-align: center;
-      padding: 0 20px;
     }
 
-    .hero h1 {
+    h1 {
       font-size: 2.5rem;
-      margin-bottom: 1rem;
-      color: #222;
-    }
-
-    .hero p {
-      font-size: 1.1rem;
-      color: #666;
-      margin-bottom: 2rem;
+      color: white;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px #00000070;
     }
 
     .btn {
+      padding: 12px 25px;
+      font-size: 1.1rem;
+      margin: 10px;
+      border: 2px solid white;
       background: transparent;
-      border: 2px solid #007bff;
-      color: #007bff;
-      padding: 10px 25px;
-      font-size: 1rem;
+      color: white;
       border-radius: 30px;
       cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
+      transition: 0.3s;
     }
 
     .btn:hover {
-      background: #007bff;
-      color: white;
+      background: white;
+      color: #0072ff;
       transform: scale(1.05);
-      box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
     }
 
-    .btn:active {
-      transform: scale(0.95);
-    }
-
-    footer {
-      background: #f0f0f0;
-      text-align: center;
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 10px;
+      background: rgba(255,255,255,0.1);
       padding: 15px;
-      font-size: 0.9rem;
-      color: #777;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(6px);
+      margin-top: 20px;
     }
 
-    @media (max-width: 600px) {
-      nav a {
-        margin: 0 8px;
-        font-size: 0.9rem;
-      }
+    .cell {
+      width: 100px;
+      height: 100px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
 
-      .hero h1 {
-        font-size: 1.8rem;
-      }
+    .cell:hover {
+      background: rgba(255,255,255,0.25);
+      transform: scale(1.03);
+    }
 
-      .hero p {
-        font-size: 1rem;
-      }
+    .popup {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: #fff;
+      color: #333;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      text-align: center;
+      width: 80%;
+      max-width: 300px;
+      transition: 0.3s ease;
+      z-index: 99;
+    }
 
-      .btn {
-        padding: 8px 20px;
+    .popup.show {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .popup h2 {
+      margin-bottom: 10px;
+      color: #0072ff;
+    }
+
+    .exit-btn {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 1.5rem;
+      color: white;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .exit-btn:hover {
+      transform: scale(1.2);
+      color: #ffdddd;
+    }
+
+    @media (max-width: 500px) {
+      .board {
+        grid-template-columns: repeat(3, 80px);
+        grid-template-rows: repeat(3, 80px);
+      }
+      .cell {
+        width: 80px;
+        height: 80px;
       }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="logo">MySite</div>
-    <nav>
-      <a href="#">Home</a>
-      <a href="#">About</a>
-      <a href="#">Contact</a>
-    </nav>
-  </header>
+  <!-- HOME -->
+  <div class="screen active" id="homeScreen">
+    <h1>Welcome to Tic Tac Toe 🎮</h1>
+    <button class="btn" onclick="startGame()">Start Game</button>
+  </div>
 
-  <section class="hero">
-    <h1>Welcome to My Simple Website</h1>
-    <p>This is a clean and responsive single-page layout.</p>
-    <button class="btn" onclick="sayHello()">Click Me</button>
-  </section>
+  <!-- MODE SELECTION -->
+  <div class="screen" id="modeScreen">
+    <h1>Select Game Mode</h1>
+    <button class="btn" onclick="selectMode('pvp')">👥 Player vs Player</button>
+    <button class="btn" onclick="selectMode('ai')">🤖 Player vs Computer</button>
+  </div>
 
-  <footer>
-    &copy; 2025 Priyanshu ji. All rights reserved.
-  </footer>
+  <!-- GAME SCREEN -->
+  <div class="screen" id="gameScreen">
+    <button class="exit-btn" onclick="goBack()">⏪</button>
+    <h1>❌🔵 Tic Tac Toe</h1>
+    <div class="board" id="board"></div>
+    <button class="btn" onclick="resetGame()">🔄 Restart</button>
+  </div>
+
+  <!-- POPUP -->
+  <div class="popup" id="popup">
+    <h2 id="popupMessage">Result</h2>
+    <button class="btn" onclick="resetGame()">Play Again</button>
+  </div>
 
   <script>
-    function sayHello() {
-      alert("Hello Priyanshu ji! 👋 Yeh button work kar raha hai!");
+    const homeScreen = document.getElementById('homeScreen');
+    const modeScreen = document.getElementById('modeScreen');
+    const gameScreen = document.getElementById('gameScreen');
+    const board = document.getElementById('board');
+    const popup = document.getElementById('popup');
+    const popupMessage = document.getElementById('popupMessage');
+
+    let cells = [];
+    let currentPlayer = 'X';
+    let mode = null;
+    let gameOver = false;
+
+    function startGame() {
+      homeScreen.classList.remove('active');
+      modeScreen.classList.add('active');
+    }
+
+    function selectMode(selected) {
+      mode = selected;
+      modeScreen.classList.remove('active');
+      gameScreen.classList.add('active');
+      createBoard();
+    }
+
+    function goBack() {
+      gameScreen.classList.remove('active');
+      modeScreen.classList.add('active');
+      resetBoardOnly();
+    }
+
+    function createBoard() {
+      board.innerHTML = '';
+      cells = [];
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.dataset.index = i;
+        cell.addEventListener('click', onCellClick);
+        board.appendChild(cell);
+        cells.push(cell);
+      }
+      gameOver = false;
+      popup.classList.remove('show');
+    }
+
+    function resetBoardOnly() {
+      currentPlayer = 'X';
+      cells.forEach(cell => cell.textContent = '');
+      popup.classList.remove('show');
+      gameOver = false;
+    }
+
+    function resetGame() {
+      currentPlayer = 'X';
+      createBoard();
+    }
+
+    function onCellClick(e) {
+      const cell = e.target;
+      if (cell.textContent || gameOver) return;
+
+      cell.textContent = currentPlayer === 'X' ? '❌' : '🔵';
+
+      if (checkWin(currentPlayer)) {
+        showPopup(`${cell.textContent} wins! 🎉`);
+        gameOver = true;
+        return;
+      }
+
+      if (cells.every(c => c.textContent)) {
+        showPopup("It's a draw! 🤝");
+        gameOver = true;
+        return;
+      }
+
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+
+      if (mode === 'ai' && currentPlayer === 'O' && !gameOver) {
+        setTimeout(aiMove, 400);
+      }
+    }
+
+    function aiMove() {
+      let best = getBestAIMove();
+      cells[best].textContent = '🔵';
+
+      if (checkWin('O')) {
+        showPopup(`🔵 wins! 🤖`);
+        gameOver = true;
+        return;
+      }
+
+      if (cells.every(c => c.textContent)) {
+        showPopup("It's a draw! 🤝");
+        gameOver = true;
+        return;
+      }
+
+      currentPlayer = 'X';
+    }
+
+    function getBestAIMove() {
+      for (let i = 0; i < 9; i++) {
+        if (cells[i].textContent === '') {
+          cells[i].textContent = '🔵';
+          if (checkWin('O')) {
+            cells[i].textContent = '';
+            return i;
+          }
+          cells[i].textContent = '';
+        }
+      }
+      for (let i = 0; i < 9; i++) {
+        if (cells[i].textContent === '') {
+          cells[i].textContent = '❌';
+          if (checkWin('X')) {
+            cells[i].textContent = '';
+            return i;
+          }
+          cells[i].textContent = '';
+        }
+      }
+      let empty = cells.map((c, i) => c.textContent === '' ? i : null).filter(i => i !== null);
+      return empty[Math.floor(Math.random() * empty.length)];
+    }
+
+    function checkWin(player) {
+      const symbol = player === 'X' ? '❌' : '🔵';
+      const winPatterns = [
+        [0,1,2], [3,4,5], [6,7,8],
+        [0,3,6], [1,4,7], [2,5,8],
+        [0,4,8], [2,4,6]
+      ];
+      return winPatterns.some(pattern =>
+        pattern.every(index => cells[index].textContent === symbol)
+      );
+    }
+
+    function showPopup(msg) {
+      popupMessage.textContent = msg;
+      popup.classList.add('show');
     }
   </script>
-
 </body>
 </html>
