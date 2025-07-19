@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>VideoFlow Pro Max – 20 GB Edition</title>
+
+  <!-- PWA Manifest (Base64-inlined) -->
+  <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiVmlkZW9GbG93IFBybyBNYXgiLCJzaG9ydF9uYW1lIjoiVmlkZW9GbG93Iiwic3RhcnRfdXJsIjoiLi8iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjNjY3ZWVhIiwidGhlbWVfY29sb3IiOiIjNjY3ZWVhIiwiaWNvbnMiOlt7InNyYyI6Imljb24tMTkyLnBuZyIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9wbmcifSx7InNyYyI6Imljb24tNTEyLnBuZyIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9wbmcifV19" />
+
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#667eea" />
+
+  <!-- ================= CSS START ================ -->
+  <style>
+/* ---------- CSS Variables ---------- */
+:root{
+  --grad1:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+  --grad2:linear-gradient(135deg,#f093fb 0%,#f5576c 100%);
+  --grad3:linear-gradient(135deg,#4facfe 0%,#00f2fe 100%);
+  --gradWarn:linear-gradient(135deg,#ff9a9e 0%,#fecfef 100%);
+  --glass:rgba(255,255,255,.08);
+  --glass-border:rgba(255,255,255,.18);
+  --txtLight:#fff;
+  --blur:16px;
+}
+/* ---------- Reset ---------- */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;scroll-behavior:smooth}
+body{min-height:100vh;background:var(--grad1);color:var(--txtLight);overflow-x:hidden}
+/* ---------- Utilities ---------- */
+.hidden{display:none!important}
+.loading{width:20px;height:20px;border:3px solid rgba(255,255,255,.3);border-radius:50%;border-top-color:#fff;animation:spin 1s linear infinite;display:inline-block;margin-right:8px}@keyframes spin{to{transform:rotate(360deg)}}
+/* ---------- Glass Card ---------- */
+.glass{background:var(--glass);backdrop-filter:blur(var(--blur));border:1px solid var(--glass-border);border-radius:18px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+/* ---------- Indicators ---------- */
+#storageBadge,#offlineBadge{position:fixed;z-index:1000;top:16px;padding:9px 18px;border-radius:24px;font-size:13px;font-weight:600;backdrop-filter:blur(12px);box-shadow:0 4px 14px rgba(0,0,0,.3)}
+#storageBadge{right:16px;background:var(--grad3)}
+#offlineBadge{left:16px;display:none;background:var(--gradWarn)}
+/* ---------- Header ---------- */
+header{text-align:center;padding:46px 15px 30px}
+header h1{font-size:clamp(2.4rem,5vw,4rem);font-weight:800;background:linear-gradient(45deg,#fff,#e0e0e0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;text-shadow:0 4px 10px rgba(0,0,0,.35)}
+.badge{display:inline-block;background:var(--grad2);padding:6px 18px;border-radius:22px;font-size:13px;font-weight:700;margin-left:10px;box-shadow:0 3px 10px rgba(0,0,0,.3)}
+.subtitle{opacity:.9;font-size:1.2rem}
+/* ---------- Auth Section ---------- */
+#loginBox{max-width:430px;margin:0 auto 40px;padding:38px 28px}#loginBox h2{font-size:1.7rem;font-weight:600;margin-bottom:26px;text-align:center;background:var(--grad3);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+label{font-weight:500;margin-bottom:6px;display:block}
+input,textarea{width:100%;padding:14px 18px;border:none;border-radius:14px;background:rgba(255,255,255,.1);color:#fff;font-size:15px;margin-bottom:22px}
+input:focus,textarea:focus{outline:none;background:rgba(255,255,255,.16)}
+button.btn{background:var(--grad3);border:none;color:#fff;padding:14px 28px;border-radius:14px;font-weight:600;font-size:15px;cursor:pointer;transition:.3s}button.btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.3)}
+/* ---------- Admin Panel ---------- */
+#adminPanel{padding:40px;margin-bottom:50px}
+.adminHead{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;margin-bottom:30px}
+.adminHead h2{font-size:1.7rem;font-weight:700;background:var(--grad3);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+button.danger{background:var(--grad2)}
+/* ---------- Storage Stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;margin-bottom:25px}
+.stat{padding:20px;text-align:center;background:rgba(255,255,255,.08);border-radius:16px}
+.statNum{font-size:2.1rem;font-weight:800;background:var(--grad3);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.statLbl{font-size:.88rem;opacity:.8}
+/* progress bar */
+.progressRow{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:6px}
+.bar{width:100%;height:10px;background:rgba(255,255,255,.2);border-radius:6px;overflow:hidden}
+.barFill{height:100%;width:0;background:var(--grad3);transition:.3s}
+/* ---------- Upload Area ---------- */
+.uploadBox{border:3px dashed rgba(255,255,255,.28);padding:58px 32px;text-align:center;border-radius:20px;background:rgba(255,255,255,.06);transition:.3s;margin-bottom:22px;cursor:pointer}
+.uploadBox:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.5)}
+.uploadBox.drag{transform:scale(1.02);border-color:#fff}
+.uploadBox p{margin-top:10px;opacity:.8;font-size:14px}
+#progressWrap{display:none;margin-top:18px}
+#pStatus{font-size:13px;margin-bottom:6px;font-weight:600}
+#pBar{height:12px;width:100%;background:rgba(255,255,255,.25);border-radius:6px;overflow:hidden}
+#pFill{width:0;height:100%;background:var(--grad3)}
+/* ---------- Folder Grid ---------- */
+.folderGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:18px;margin:20px 0}
+.folderItem{padding:18px;border:2px solid rgba(255,255,255,.25);border-radius:14px;text-align:center;cursor:pointer;background:rgba(255,255,255,.08);transition:.25s}
+.folderItem:hover{background:rgba(255,255,255,.15)}
+.folderItem.sel{border-color:#00f2fe;background:rgba(0,242,254,.28)}
+.folderIcon{font-size:2rem;margin-bottom:6px}
+/* ---------- Gallery ---------- */
+.galleryHead{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin:40px 0 26px}
+.galleryHead h3{font-size:1.9rem;font-weight:700;background:var(--grad3);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.filterBtn{padding:10px 22px;border:2px solid rgba(255,255,255,.3);background:transparent;border-radius:24px;font-size:14px;color:#fff;cursor:pointer;margin:4px 4px;transition:.25s}
+.filterBtn.active,.filterBtn:hover{border-color:#00f2fe;background:rgba(0,242,254,.25)}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:28px}
+/* card */
+.card{position:relative;border-radius:18px;overflow:hidden;background:var(--glass);border:1px solid var(--glass-border);transition:.35s}
+.card:hover{transform:translateY(-8px);box-shadow:0 16px 34px rgba(0,0,0,.35)}
+.card video{width:100%;height:220px;object-fit:cover}
+.badge{position:absolute;top:14px;padding:5px 10px;border-radius:14px;font-size:11px;font-weight:600}
+.offline{right:14px;background:var(--grad3)}
+.size{left:14px;background:var(--grad2)}
+.info{padding:22px}
+.info h4{font-size:1.25rem;margin-bottom:10px}
+.meta{display:flex;justify-content:space-between;font-size:12px;opacity:.7;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.aBtn{flex:1;padding:10px;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;transition:.25s}
+.dl{background:var(--grad3)}.cache{background:var(--gradWarn)}.del{background:var(--grad2)}
+/* ---------- Message ---------- */
+#msg{margin:26px 0}.note{padding:18px;border-radius:14px;text-align:center;font-weight:600;animation:fade .4s}.note.success{background:rgba(76,175,80,.2)}.note.error{background:rgba(244,67,54,.22)}.note.info{background:rgba(0,156,255,.2)}@keyframes fade{from{opacity:0;transform:translateY(-10px)}to{opacity:1}}
+/* ---------- About Us ---------- */
+.about{margin-top:80px;padding:60px 32px;background:var(--grad2)}
+.about h2{font-size:2.8rem;font-weight:800;text-align:center;margin-bottom:24px;background:linear-gradient(45deg,#fff,#eee);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.about p{max-width:900px;margin:0 auto 40px;font-size:1.05rem;line-height:1.7;text-align:center;opacity:.92}
+.foot{margin-top:40px;text-align:center;font-size:.85rem;opacity:.75}
+/* ---------- Responsive ---------- */
+@media(max-width:768px){
+ .gallery{grid-template-columns:1fr}
+ .uploadBox{padding:46px 24px}
+ .stats{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:480px){
+ .stats{grid-template-columns:1fr}
+}
+  </style>
+  <!-- ================= CSS END ================ -->
+</head>
+<body>
+
+<!-- ===== Indicators ===== -->
+<div id="storageBadge" class="glass">💾 Storage 0 / 20 GB</div>
+<div id="offlineBadge" class="glass">🔌 Offline Mode</div>
+
+<!-- ===== Header ===== -->
+<header>
+  <h1>🎬 VideoFlow <span class="badge">Pro Max</span></h1>
+  <p class="subtitle">20 GB Offline-Ready Large-Video Platform</p>
+</header>
+
+<!-- ===== Login Box ===== -->
+<section id="loginBox" class="glass">
+  <h2>🔐 Admin Login</h2>
+  <label>Username</label>
+  <input id="uName" placeholder="priyanshu1836" />
+  <label>Password</label>
+  <input id="uPass" type="password" placeholder="1836@1836" />
+  <button class="btn" onclick="login()"><span id="loginTxt">Login</span></button>
+</section>
+
+<!-- ===== Admin Panel ===== -->
+<section id="adminPanel" class="glass hidden">
+
+  <div class="adminHead">
+    <h2>⚡ Control Panel</h2>
+    <button class="btn danger" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Storage Stats -->
+  <div class="stats glass">
+    <div class="stat"><div class="statNum" id="vCount">0</div><div class="statLbl">Total Videos</div></div>
+    <div class="stat"><div class="statNum" id="cCount">0</div><div class="statLbl">Offline Cached</div></div>
+    <div class="stat"><div class="statNum" id="usedGB">0 GB</div><div class="statLbl">Used Space</div></div>
+    <div class="stat"><div class="statNum" id="freeGB">20 GB</div><div class="statLbl">Free Space</div></div>
+  </div>
+  <div class="progressRow"><span>Usage</span><span id="usePct">0%</span></div>
+  <div class="bar"><div id="barFill" class="barFill"></div></div>
+
+  <!-- Upload -->
+  <div class="uploadBox glass" id="dragZone" onclick="fInput.click()">
+    <h3>📁 बड़ी Video Select करें / Drag-Drop</h3>
+    <p>Single file limit 5 GB • Total 20 GB • OPFS Optimised</p>
+    <input type="file" id="fInput" class="hidden" accept="video/*" onchange="filePicked(event)" />
+    <div id="progressWrap">
+      <div id="pStatus">Reading file…</div>
+      <div id="pBar"><div id="pFill"></div></div>
+    </div>
+  </div>
+
+  <!-- Folder Selection -->
+  <h4>📂 Folder</h4>
+  <div class="folderGrid" id="fGrid"></div>
+  <input id="custFold" placeholder="Custom folder (optional)" />
+
+  <!-- Title & Desc -->
+  <input id="vTitle" placeholder="Video Title" />
+  <textarea id="vDesc" rows="3" placeholder="Description…"></textarea>
+
+  <button class="btn" id="upBtn" onclick="uploadVid()">📤 Upload Video</button>
+</section>
+
+<!-- Message Area -->
+<div id="msg"></div>
+
+<!-- ===== Gallery ===== -->
+<section>
+  <div class="galleryHead">
+    <h3>🎞️ Gallery</h3>
+    <div id="fFilter"></div>
+  </div>
+  <div class="gallery" id="gallery"></div>
+</section>
+
+<!-- ===== About ===== -->
+<section class="about">
+  <h2>🌟 About VideoFlow Pro Max</h2>
+  <p>Browser-based platform leveraging OPFS, IndexedDB, Service Worker and modern Web APIs to deliver seamless offline-ready large-video experience up to 20 GB.</p>
+  <p class="foot">© 2025 Priyanshu • Made with ❤️ in India</p>
+</section>
+
+<!-- ================= JS START ================ -->
+<script>
+/* ====== Globals ===== */
+let isAdmin=false,selFile=null,selFolder='General',filter='All';
+const LIM={TOTAL:20*1024**3,SINGLE:5*1024**3};    // 20 GB / 5 GB
+let opfs=!!(navigator.storage&&navigator.storage.getDirectory),root;
+const cacheName='vf-cache-v3';
+const fHandles={};   // opfs handle cache
+
+/* ====== Init ===== */
+document.addEventListener('DOMContentLoaded',async()=>{
+  if(opfs) root=await navigator.storage.getDirectory();
+  buildFolders();
+  loadVideos();
+  updateStats();
+  navigator.storage?.estimate?.().then(q=>updateBadge(q.usage,q.quota));
+  window.addEventListener('online',()=>toggleNet(true));
+  window.addEventListener('offline',()=>toggleNet(false));
+});
+
+/* ====== Auth ===== */
+function login(){
+  const u=document.getElementById('uName').value.trim();
+  const p=document.getElementById('uPass').value.trim();
+  if(u==='priyanshu1836'&&p==='1836@1836'){isAdmin=true;
+    loginBox.classList.add('hidden');adminPanel.classList.remove('hidden');
+    note('Admin login success!','success');
+  }else note('Wrong credentials','error');
+}
+function logout(){isAdmin=false;location.reload();}
+
+/* ====== Folder UI ===== */
+const baseFolders=['Entertainment','Education','Music','Sports','Technology','Travel','Movies','Series'];
+function buildFolders(){
+  fGrid.innerHTML=baseFolders.map(f=>
+    `<div class="folderItem" onclick="pickFold(this,'${f}')"><div class="folderIcon">📁</div>${f}</div>`).join('');
+}
+function pickFold(el,f){document.querySelectorAll('.folderItem').forEach(x=>x.classList.remove('sel'));
+ el.classList.add('sel');selFolder=f;custFold.value='';}
+
+/* ====== Drag & Drop ===== */
+['dragenter','dragover','dragleave','drop'].forEach(ev=>{
+  dragZone.addEventListener(ev,e=>{e.preventDefault();e.stopPropagation();});
+});
+['dragenter','dragover'].forEach(ev=>dragZone.addEventListener(ev,()=>dragZone.classList.add('drag')));
+['dragleave','drop'].forEach(ev=>dragZone.addEventListener(ev,()=>dragZone.classList.remove('drag')));
+dragZone.addEventListener('drop',e=>{filePicked({target:{files:e.dataTransfer.files}})});
+
+/* ====== File Pick ===== */
+function filePicked(e){
+  const f=e.target.files[0]; if(!f||!f.type.startsWith('video/')){note('invalid file','error');return;}
+  if(f.size>LIM.SINGLE){note('Single file limit 5 GB','error');return;}
+  if(totalBytes()+f.size>LIM.TOTAL){note('Storage full (20 GB)','error');return;}
+  selFile=f; note('File selected: '+f.name,'info');
+}
+
+/* ====== Upload ===== */
+async function uploadVid(){
+  if(!selFile){note('Select file','error');return;}
+  const title=vTitle.value.trim();if(!title){note('Title required','error');return;}
+  if(custFold.value.trim()) selFolder=custFold.value.trim();
+
+  upBtn.disabled=true;progress(0,'Reading file…');
+  let payload={},start=Date.now();
+  try{
+    if(opfs&&selFile.size>100*1024**2){  // >100 MB
+      const h=await root.getFileHandle('v_'+Date.now()+'_'+selFile.name,{create:true});
+      const w=await h.createWritable(); await w.write(selFile);await w.close();
+      payload={ref:{type:'opfs',name:h.name},size:selFile.size};
+    }else{
+      const d=await selFile.arrayBuffer();payload={data:btoa(String.fromCharCode(...new Uint8Array(d))),size:selFile.size};
+    }
+  }catch(err){console.error(err);note('read fail','error');upBtn.disabled=false;return;}
+  progress(90,'Saving…');
+  const clip={id:Date.now(),title,desc:vDesc.value.trim(),folder:selFolder,...payload,
+              file:selFile.name,date:new Date().toLocaleDateString('hi-IN'),
+              time:new Date().toLocaleTimeString('hi-IN'),cached:false};
+  const arr=JSON.parse(localStorage.getItem('vf_vids')||'[]');arr.push(clip);
+  localStorage.setItem('vf_vids',JSON.stringify(arr));
+  progress(100,'Done');setTimeout(()=>{progress(0,'');resetForm();loadVideos();updateStats();
+     note('Upload OK ('+Math.round((Date.now()-start)/1000)+' s)','success');},600);
+}
+function progress(p,txt){pFill.style.width=p+'%';pStatus.textContent=txt;
+ pBar.parentElement.style.display=txt?'block':'none';}
+
+/* ====== Reset ===== */
+function resetForm(){selFile=null;vTitle.value=vDesc.value='';custFold.value='';selFolder='General';
+ document.querySelectorAll('.folderItem').forEach(x=>x.classList.remove('sel'));upBtn.disabled=false;}
+
+/* ====== Gallery Load ===== */
+async function loadVideos(){
+  const list=JSON.parse(localStorage.getItem('vf_vids')||'[]');
+  const show=list.filter(v=>filter==='All'||v.folder===filter).reverse();
+  if(!show.length){gallery.innerHTML='<p style="text-align:center;opacity:.8">No videos</p>';return;}
+  const cards=await Promise.all(show.map(async v=>{
+    let src='',store=v.ref?.type||'data';
+    if(v.ref?.type==='opfs'){try{fHandles[v.ref.name]??=await root.getFileHandle(v.ref.name);
+       src=URL.createObjectURL(await (await fHandles[v.ref.name].getFile()));}catch{}}
+    else src='data:video/mp4;base64,'+v.data;
+    const sz=format(v.size),sizeBadge=v.size>1024**3?'🔥 '+sz:v.size>100*1024**2?'⚡ '+sz:sz;
+    return `<div class="card">
+      ${v.cached?'<div class="badge offline">📱 Offline</div>':''}
+      <div class="badge size">${sizeBadge}</div>
+      <video src="${src}" controls></video>
+      <div class="info"><h4>${v.title}</h4>
+      <div class="meta"><span>📅 ${v.date}</span><span>${v.folder}</span></div>
+      <p style="font-size:13px;opacity:.85;margin-bottom:12px">${v.desc||''}</p>
+      <div class="actions">
+        <button class="aBtn dl" onclick="download('${v.id}')">💾 Download</button>
+        ${!v.cached&&store!=='opfs'?`<button class="aBtn cache" onclick="cache('${v.id}')">📱 Cache</button>`:''}
+        ${isAdmin?`<button class="aBtn del" onclick="removeVid('${v.id}')">🗑️ Delete</button>`:''}
+      </div></div></div>`}));
+  gallery.innerHTML=cards.join('');
+}
+
+/* ====== Cache ===== */
+async function cache(id){
+  const arr=JSON.parse(localStorage.getItem('vf_vids'));const v=arr.find(x=>x.id==id);
+  if(!v||v.cached)return;
+  const c=await caches.open(cacheName);await c.put('v_'+id,new Response(atob(v.data)));
+  v.cached=true;localStorage.setItem('vf_vids',JSON.stringify(arr));loadVideos();note('Cached','success');updateStats();
+}
+async function removeCached(id){const c=await caches.open(cacheName);await c.delete('v_'+id);}
+
+/* ====== Download ===== */
+async function download(id){
+ const v=JSON.parse(localStorage.getItem('vf_vids')).find(x=>x.id==id);if(!v)return;
+ let blob;if(v.ref?.type==='opfs'){const fh=await root.getFileHandle(v.ref.name);blob=await (await fh.getFile());}
+ else blob=new Blob([Uint8Array.from(atob(v.data),c=>c.charCodeAt(0))],{type:'video/mp4'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=v.file;document.body.append(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(a.href),800);
+}
+
+/* ====== Delete ===== */
+async function removeVid(id){
+ if(!confirm('Delete permanently?'))return;
+ const arr=JSON.parse(localStorage.getItem('vf_vids'));const idx=arr.findIndex(x=>x.id==id);if(idx==-1)return;
+ const v=arr[idx];if(v.ref?.type==='opfs')try{await root.removeEntry(v.ref.name);}catch{}
+ await removeCached(id);arr.splice(idx,1);localStorage.setItem('vf_vids',JSON.stringify(arr));
+ loadVideos();updateStats();note('Deleted','info');
+}
+
+/* ====== Stats & Badge ===== */
+function totalBytes(){return JSON.parse(localStorage.getItem('vf_vids')||'[]').reduce((s,v)=>s+(v.size||0),0);}
+function updateStats(){
+ const vids=JSON.parse(localStorage.getItem('vf_vids')||'[]');
+ vCount.textContent=vids.length;
+ cCount.textContent=vids.filter(x=>x.cached).length;
+ usedGB.textContent=format(totalBytes());
+ freeGB.textContent=format(LIM.TOTAL-totalBytes());
+ const p=totalBytes()/LIM.TOTAL*100;usePct.textContent=p.toFixed(0)+'%';barFill.style.width=p+'%';
+ updateBadge(totalBytes(),LIM.TOTAL);
+}
+function updateBadge(u,q){storageBadge.textContent=`💾 Storage ${format(u)} / ${format(q)}`;
+ storageBadge.style.background=pct(u,q)>95?varColor('--grad2'):pct(u,q)>80?varColor('--gradWarn'):varColor('--grad3');}
+function pct(a,b){return a/b*100}function varColor(v){return getComputedStyle(document.documentElement).getPropertyValue(v)}
+/* ====== Helper ===== */
+function note(txt,cls){msg.innerHTML=`<div class="note ${cls}">${txt}</div>`;}
+function format(b){const k=1024,s=['Bytes','KB','MB','GB','TB'];const i=Math.floor(Math.log(b)/Math.log(k));return (b/Math.pow(k,i)).toFixed(2)+' '+s[i];}
+function toggleNet(on){offlineBadge.style.display=on?'none':'block';}
+/* ====== Filter Buttons ===== */
+function buildFilters(){
+ const f=Array.from(new Set(JSON.parse(localStorage.getItem('vf_vids')||'[]').map(v=>v.folder)));
+ fFilter.innerHTML=['All',...f].map(x=>`<button class="filterBtn${x==='All'?' active':''}" onclick="applyFilter(this,'${x}')">${x}</button>`).join('');
+}
+function applyFilter(btn,f){document.querySelectorAll('.filterBtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');filter=f;loadVideos();}
+
+buildFilters();
+/* ====== Service Worker ===== */
+if('serviceWorker' in navigator){
+ navigator.serviceWorker.register(URL.createObjectURL(new Blob([`self.addEventListener('fetch',()=>{})`],{type:'text/javascript'})));
+}
+</script>
+<!-- ================= JS END ================ -->
+
+</body>
+</html>
